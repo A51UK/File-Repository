@@ -1,0 +1,20 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+
+namespace File_Repository
+{
+    public class LocalStorageFileSystem : StorageBase
+    {
+        public override FileData Get(string key, string type)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string Save(string type, string Name, Stream file, string address)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}
