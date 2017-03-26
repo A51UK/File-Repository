@@ -12,7 +12,7 @@ namespace File_Repository
             throw new NotImplementedException();
         }
 
-        public override string Save(string type, string Name, Stream file, string address)
+        public override string Save(string type, string name, Stream file, string address)
         {
             throw new NotImplementedException();
         }
