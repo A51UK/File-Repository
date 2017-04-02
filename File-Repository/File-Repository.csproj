@@ -9,4 +9,9 @@
     <Folder Include="Distributed\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Google.Apis" Version="1.24.1" />
+    <PackageReference Include="Google.Cloud.Storage.V1" Version="1.0.0" />
+  </ItemGroup>
+
 </Project>
