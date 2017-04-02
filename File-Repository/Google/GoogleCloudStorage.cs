@@ -15,7 +15,19 @@ namespace File_Repository
 
             FileData file = new FileData();
 
-            storageClient.DownloadObject(fileGetOptions.Folder, fileGetOptions.Key, file.Stream);
+            switch (fileGetOptions.FileTransfer)
+            {
+                case FileTransferOptions.Stream:
+                    storageClient.DownloadObject(fileGetOptions.Folder, fileGetOptions.Key, file.Stream);
+                break;
+                case FileTransferOptions.Url:
+                     var _file =  storageClient.GetObject(fileGetOptions.Folder, fileGetOptions.Key);
+                     if(_file != null)
+                     {
+                        file.Loc = _file.MediaLink;
+                     }
+                 break;
+            }
 
             file.Type = "Google Cloud Storage";
 
