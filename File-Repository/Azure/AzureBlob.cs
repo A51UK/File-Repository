@@ -7,7 +7,7 @@ namespace File_Repository
 {
     public class AzureBlob : StorageBase
     {
-        public override FileData Get(string key, string type)
+        public override FileData Get(FileGetOptions fileGetOptions)
         {
             throw new NotImplementedException();
         }

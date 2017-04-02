@@ -8,14 +8,14 @@ namespace File_Repository
 {
     public class GoogleCloudStorage : StorageBase
     {
-        public override FileData Get(string key, string type)
+        public override FileData Get(FileGetOptions fileGetOptions)
         {
 
             StorageClient storageClient = StorageClient.Create();
 
             FileData file = new FileData();
 
-            storageClient.DownloadObject(type, key, file.Stream);
+            storageClient.DownloadObject(fileGetOptions.Folder, fileGetOptions.Key, file.Stream);
 
             file.Type = "Google Cloud Storage";
 
