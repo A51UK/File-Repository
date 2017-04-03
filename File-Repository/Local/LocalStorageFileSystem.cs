@@ -9,7 +9,18 @@ namespace File_Repository
     {
         public override FileData Get(FileGetOptions fileGetOptions)
         {
-            throw new NotImplementedException();
+            string fileAddress = Path.Combine(fileGetOptions.Address, fileGetOptions.Folder, fileGetOptions.Key);
+
+            FileData file = new FileData();
+
+            using (FileStream fs = new FileStream(fileAddress, FileMode.Open, FileAccess.Read))
+            {
+                fs.CopyTo(file.Stream);
+            }
+
+            file.Type = "Local File System";
+
+            return file;
         }
 
         public override string Save(FileSetOptions fileSetOptions)

@@ -9,6 +9,7 @@ namespace File_Repository
         public string Folder { get; set; } = string.Empty;
         public string Key { get; set; } = string.Empty;
         public FileTransferOptions FileTransfer { get; set; } = FileTransferOptions.Stream;
+        public string Address { get; set; } = string.Empty;
     }
 
     public enum FileTransferOptions
