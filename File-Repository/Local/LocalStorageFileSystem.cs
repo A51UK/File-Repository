@@ -12,17 +12,17 @@ namespace File_Repository
             throw new NotImplementedException();
         }
 
-        public override string Save(string type, string name, Stream file, string address)
+        public override string Save(FileSetOptions fileSetOptions)
         {
 
-            string fileAddress = Path.Combine(address, type, name);
+            string fileAddress = Path.Combine(fileSetOptions.Address,fileSetOptions.Folder, fileSetOptions.Key);
 
             using (FileStream fs = new FileStream(fileAddress, FileMode.Create, FileAccess.Write))
             {
-                file.CopyTo(file);
+                fileSetOptions._stream.CopyTo(fileSetOptions._stream);
             }
 
-            return name;
+            return fileSetOptions.Key;
         }
     }
 }

@@ -34,9 +34,13 @@ namespace File_Repository
             return file;
         }
 
-        public override string Save(string type, string name, Stream file, string address)
+        public override string Save(FileSetOptions fileSetOptions)
         {
-            throw new NotImplementedException();
+            StorageClient storageClinet = StorageClient.Create();
+
+            storageClinet.UploadObject(fileSetOptions.Folder,fileSetOptions.Key,fileSetOptions.ContentType,fileSetOptions._stream);
+
+            return fileSetOptions.Key;
         }
     }
 }

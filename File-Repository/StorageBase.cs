@@ -5,7 +5,7 @@ namespace File_Repository
 {
     public abstract class StorageBase
     {
-        public abstract string Save(string type, string name, Stream file, string address);
+        public abstract string Save(FileSetOptions fileSetOptions);
         public abstract FileData Get(FileGetOptions fileGetOptions);
     }
 }
