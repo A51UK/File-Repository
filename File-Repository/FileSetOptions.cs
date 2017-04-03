@@ -12,5 +12,6 @@ namespace File_Repository
         public Stream _stream { get; set; } = null;
         public string ContentType { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
+        public FileAccessLevel FileAccess { get; set; } = FileAccessLevel._private;
     }
 }

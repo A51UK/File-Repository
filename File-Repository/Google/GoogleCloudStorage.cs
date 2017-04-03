@@ -19,14 +19,14 @@ namespace File_Repository
             {
                 case FileTransferOptions.Stream:
                     storageClient.DownloadObject(fileGetOptions.Folder, fileGetOptions.Key, file.Stream);
-                break;
+                    break;
                 case FileTransferOptions.Url:
-                     var _file =  storageClient.GetObject(fileGetOptions.Folder, fileGetOptions.Key);
-                     if(_file != null)
-                     {
+                    var _file = storageClient.GetObject(fileGetOptions.Folder, fileGetOptions.Key);
+                    if (_file != null)
+                    {
                         file.Loc = _file.MediaLink;
-                     }
-                 break;
+                    }
+                    break;
             }
 
             file.Type = "Google Cloud Storage";
@@ -36,9 +36,22 @@ namespace File_Repository
 
         public override string Save(FileSetOptions fileSetOptions)
         {
+
             StorageClient storageClinet = StorageClient.Create();
 
-            storageClinet.UploadObject(fileSetOptions.Folder,fileSetOptions.Key,fileSetOptions.ContentType,fileSetOptions._stream);
+            PredefinedObjectAcl predefinedObjectAcl = PredefinedObjectAcl.ProjectPrivate; 
+
+            switch (fileSetOptions.FileAccess)
+            {
+                case FileAccessLevel._private:
+                    predefinedObjectAcl = PredefinedObjectAcl.AuthenticatedRead;
+                    break;
+                case FileAccessLevel._public:
+                    predefinedObjectAcl = PredefinedObjectAcl.PublicRead;
+                    break;
+            }
+
+            storageClinet.UploadObject(fileSetOptions.Folder, fileSetOptions.Key, fileSetOptions.ContentType, fileSetOptions._stream, new UploadObjectOptions() { PredefinedAcl = predefinedObjectAcl });
 
             return fileSetOptions.Key;
         }
