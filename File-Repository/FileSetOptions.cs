@@ -13,5 +13,7 @@ namespace File_Repository
         public string ContentType { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
         public FileAccessLevel FileAccess { get; set; } = FileAccessLevel._private;
+        public CloudSecureOptions CloudSecure { get; set; } = CloudSecureOptions.defualt;
+        public string SecureFileLocation { get; set; } = string.Empty;
     }
 }
