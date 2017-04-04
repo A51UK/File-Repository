@@ -1,4 +1,5 @@
-﻿using System;
+﻿using File_Repository.Enum;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -15,5 +16,7 @@ namespace File_Repository
         public FileAccessLevel FileAccess { get; set; } = FileAccessLevel._private;
         public CloudSecureOptions CloudSecure { get; set; } = CloudSecureOptions.defualt;
         public string SecureFileLocation { get; set; } = string.Empty;
+        public FolderOptions folderOptions { get; set; } = FolderOptions.CreateIfNull;
+        public string ProjectId { get; set; } = string.Empty;
     }
 }

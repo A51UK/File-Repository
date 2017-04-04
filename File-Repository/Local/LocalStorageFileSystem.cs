@@ -26,7 +26,16 @@ namespace File_Repository
         public override string Save(FileSetOptions fileSetOptions)
         {
 
-            string fileAddress = Path.Combine(fileSetOptions.Address,fileSetOptions.Folder, fileSetOptions.Key);
+            string subAddress = Path.Combine(fileSetOptions.Address, fileSetOptions.Folder);
+            string fileAddress = Path.Combine(subAddress, fileSetOptions.Key);
+
+            if(fileSetOptions.folderOptions == Enum.FolderOptions.CreateIfNull)
+            {
+                if(Directory.Exists(subAddress) == false)
+                {
+                    Directory.CreateDirectory(subAddress);
+                }
+            }
 
             using (FileStream fs = new FileStream(fileAddress, FileMode.Create, FileAccess.Write))
             {

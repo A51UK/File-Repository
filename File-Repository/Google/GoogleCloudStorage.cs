@@ -55,16 +55,30 @@ namespace File_Repository
             StorageClient storageClinet = StorageClient.Create(credential);
 
             PredefinedObjectAcl predefinedObjectAcl = PredefinedObjectAcl.ProjectPrivate;
+            PredefinedBucketAcl predefinedBucketAcl = PredefinedBucketAcl.ProjectPrivate;
 
             switch (fileSetOptions.FileAccess)
             {
                 case FileAccessLevel._private:
                     predefinedObjectAcl = PredefinedObjectAcl.AuthenticatedRead;
+                    predefinedBucketAcl = PredefinedBucketAcl.AuthenticatedRead;
                     break;
 
                 case FileAccessLevel._public:
                     predefinedObjectAcl = PredefinedObjectAcl.PublicRead;
+                    predefinedBucketAcl = PredefinedBucketAcl.PublicRead;
                     break;
+            }
+
+
+            if (fileSetOptions.folderOptions == FolderOptions.CreateIfNull)
+            {
+                var folder = storageClinet.GetBucketAsync(fileSetOptions.Folder).Result;
+
+                if (folder == null)
+                {
+                    storageClinet.CreateBucket(fileSetOptions.ProjectId, fileSetOptions.Folder, new CreateBucketOptions() { PredefinedAcl = predefinedBucketAcl, PredefinedDefaultObjectAcl = predefinedObjectAcl);
+                }
             }
 
             storageClinet.UploadObject(fileSetOptions.Folder, fileSetOptions.Key, fileSetOptions.ContentType, fileSetOptions._stream, new UploadObjectOptions() { PredefinedAcl = predefinedObjectAcl });
