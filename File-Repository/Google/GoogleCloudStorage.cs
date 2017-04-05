@@ -38,7 +38,7 @@ namespace File_Repository
 
                     if (urlSigner != null)
                     {
-                        urlSigner.Sign(fileGetOptions.Folder, fileGetOptions.Key, );
+                        urlSigner.Sign(fileGetOptions.Folder, fileGetOptions.Key,fileGetOptions.SecureLinkTimeToLive);
                     }
                     break;
             }
@@ -77,7 +77,7 @@ namespace File_Repository
 
                 if (folder == null)
                 {
-                    storageClinet.CreateBucket(fileSetOptions.ProjectId, fileSetOptions.Folder, new CreateBucketOptions() { PredefinedAcl = predefinedBucketAcl, PredefinedDefaultObjectAcl = predefinedObjectAcl);
+                    storageClinet.CreateBucket(fileSetOptions.ProjectId, fileSetOptions.Folder, new CreateBucketOptions() { PredefinedAcl = predefinedBucketAcl, PredefinedDefaultObjectAcl = predefinedObjectAcl });
                 }
             }
 
