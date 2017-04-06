@@ -6,26 +6,27 @@ using Google.Cloud.Storage.V1;
 using Google.Apis.Storage.v1;
 using Google.Apis.Auth.OAuth2;
 using File_Repository.Enum;
+using System.Threading.Tasks;
 
 namespace File_Repository
 {
     public class GoogleCloudStorage : StorageBase
     {
-        public override FileData Get(FileGetOptions fileGetOptions)
+        public override async Task<FileData> GetAsync(FileGetOptions fileGetOptions)
         {
-            GoogleCredential credential = Authorized(fileGetOptions);
-            StorageClient storageClient = StorageClient.Create(credential);
+            GoogleCredential credential = await AuthorizedAsync(fileGetOptions);
+            StorageClient storageClient = await StorageClient.CreateAsync(credential);
 
             FileData file = new FileData();
 
             switch (fileGetOptions.FileTransfer)
             {
                 case FileTransferOptions.Stream:
-                    storageClient.DownloadObject(fileGetOptions.Folder, fileGetOptions.Key, file.Stream);
+                    await storageClient.DownloadObjectAsync(fileGetOptions.Folder, fileGetOptions.Key, file.Stream);
                     break;
 
                 case FileTransferOptions.Url:
-                    var _file = storageClient.GetObject(fileGetOptions.Folder, fileGetOptions.Key);
+                    var _file = await storageClient.GetObjectAsync(fileGetOptions.Folder, fileGetOptions.Key);
 
                     if (_file != null)
                     {
@@ -34,7 +35,7 @@ namespace File_Repository
                     break;
 
                 case FileTransferOptions.SecureUrl:
-                    var urlSigner = UrlSigner.FromServiceAccountCredential((ServiceAccountCredential)credential.UnderlyingCredential);
+                    var urlSigner =  UrlSigner.FromServiceAccountCredential((ServiceAccountCredential)credential.UnderlyingCredential);
 
                     if (urlSigner != null)
                     {
@@ -48,11 +49,11 @@ namespace File_Repository
             return file;
         }
 
-        public override string Save(FileSetOptions fileSetOptions)
+        public override async Task<string> SaveAsync(FileSetOptions fileSetOptions)
         {
-            GoogleCredential credential = Authorized(fileSetOptions);
+            GoogleCredential credential = await AuthorizedAsync(fileSetOptions);
 
-            StorageClient storageClinet = StorageClient.Create(credential);
+            StorageClient storageClinet = await StorageClient.CreateAsync(credential);
 
             PredefinedObjectAcl predefinedObjectAcl = PredefinedObjectAcl.ProjectPrivate;
             PredefinedBucketAcl predefinedBucketAcl = PredefinedBucketAcl.ProjectPrivate;
@@ -73,29 +74,29 @@ namespace File_Repository
 
             if (fileSetOptions.folderOptions == FolderOptions.CreateIfNull)
             {
-                var folder = storageClinet.GetBucketAsync(fileSetOptions.Folder).Result;
+                var folder = await storageClinet.GetBucketAsync(fileSetOptions.Folder);
 
                 if (folder == null)
                 {
-                    storageClinet.CreateBucket(fileSetOptions.ProjectId, fileSetOptions.Folder, new CreateBucketOptions() { PredefinedAcl = predefinedBucketAcl, PredefinedDefaultObjectAcl = predefinedObjectAcl });
+                   await storageClinet.CreateBucketAsync(fileSetOptions.ProjectId, fileSetOptions.Folder, new CreateBucketOptions() { PredefinedAcl = predefinedBucketAcl, PredefinedDefaultObjectAcl = predefinedObjectAcl });
                 }
             }
 
-            storageClinet.UploadObject(fileSetOptions.Folder, fileSetOptions.Key, fileSetOptions.ContentType, fileSetOptions._stream, new UploadObjectOptions() { PredefinedAcl = predefinedObjectAcl });
+            await storageClinet.UploadObjectAsync(fileSetOptions.Folder, fileSetOptions.Key, fileSetOptions.ContentType, fileSetOptions._stream, new UploadObjectOptions() { PredefinedAcl = predefinedObjectAcl });
 
             return fileSetOptions.Key;
         }
 
-        private GoogleCredential Authorized(dynamic secureOptions)
+        private async Task<GoogleCredential> AuthorizedAsync(dynamic secureOptions)
         {
             switch (secureOptions.CloudSecure)
             {
                 case CloudSecureOptions.defualt:
-                    return GoogleCredential.GetApplicationDefaultAsync().Result;
+                    return await GoogleCredential.GetApplicationDefaultAsync();
                 case CloudSecureOptions.file:
-                    return GoogleCredential.FromJson(secureOptions.SecureFileLocation);
+                    return await GoogleCredential.FromJson(secureOptions.SecureFileLocation);
                 default:
-                    return GoogleCredential.GetApplicationDefaultAsync().Result;
+                    return await GoogleCredential.GetApplicationDefaultAsync();
             }
 
         }

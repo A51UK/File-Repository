@@ -13,6 +13,7 @@ namespace File_Repository
         public string Address { get; set; } = string.Empty;
         public CloudSecureOptions CloudSecure { get; set; } = CloudSecureOptions.defualt;
         public string SecureFileLocation { get; set; } = string.Empty;
+        public string ConfigurationString { get; set; } = string.Empty;
         public TimeSpan SecureLinkTimeToLive { get; set; } = new TimeSpan(1, 0, 0);
 
     }
