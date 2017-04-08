@@ -30,11 +30,18 @@ namespace File_Repository
                     break;
 
                 case Enum.FileTransferOptions.Url:
-                    file.Loc = await blockBlob.AcquireLeaseAsync(null);
+                    file.Loc = blockBlob.Uri.AbsoluteUri;
                     break;
 
                 case Enum.FileTransferOptions.SecureUrl:
-                    file.Loc = await blockBlob.AcquireLeaseAsync(fileGetOptions.SecureLinkTimeToLive);
+
+                    var policy = new SharedAccessBlobPolicy()
+                    {
+                        Permissions = SharedAccessBlobPermissions.Read,
+                        SharedAccessExpiryTime = DateTime.UtcNow + fileGetOptions.SecureLinkTimeToLive
+                    };
+
+                    file.Loc = (blockBlob.Uri.AbsoluteUri + blockBlob.GetSharedAccessSignature(policy));
                     break;
             }
 
@@ -45,7 +52,32 @@ namespace File_Repository
 
         public override async Task<string> SaveAsync(FileSetOptions fileSetOptions)
         {
-            throw new NotImplementedException();
+
+            CloudStorageAccount storageAccount = Authorized(fileSetOptions.ConfigurationString);
+
+            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+
+            CloudBlobContainer container = blobClient.GetContainerReference(fileSetOptions.Folder);
+
+            if (await container.CreateIfNotExistsAsync())
+            {
+                if (fileSetOptions.FileAccess == FileAccessLevel._public)
+                {
+                    var publicAccess = BlobContainerPublicAccessType.Blob;
+                    var sharedAccessPolicies = new SharedAccessBlobPolicy
+                    {
+                        Permissions = SharedAccessBlobPermissions.Read,
+                    };
+
+                    await container.SetPermissionsAsync(new BlobContainerPermissions() { PublicAccess = publicAccess });
+                }
+            }
+
+            CloudBlockBlob blockBlob = container.GetBlockBlobReference(fileSetOptions.Key);
+
+            await blockBlob.UploadFromStreamAsync(fileSetOptions._stream);
+
+            return fileSetOptions.Key;
         }
 
         private CloudStorageAccount Authorized(dynamic secureOptions)

@@ -18,5 +18,6 @@ namespace File_Repository
         public string SecureFileLocation { get; set; } = string.Empty;
         public FolderOptions folderOptions { get; set; } = FolderOptions.CreateIfNull;
         public string ProjectId { get; set; } = string.Empty;
+        public string ConfigurationString { get; set; } = string.Empty;
     }
 }
