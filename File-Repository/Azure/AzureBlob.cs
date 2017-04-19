@@ -33,7 +33,7 @@ namespace File_Repository
         {
             FileData file = new FileData();
 
-            CloudStorageAccount storageAccount = Authorized(fileGetOptions.ConfigurationString);
+            CloudStorageAccount storageAccount = Authorized(fileGetOptions);
 
             CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
 
@@ -71,7 +71,7 @@ namespace File_Repository
         public override async Task<string> SaveAsync(FileSetOptions fileSetOptions)
         {
 
-            CloudStorageAccount storageAccount = Authorized(fileSetOptions.ConfigurationString);
+            CloudStorageAccount storageAccount = Authorized(fileSetOptions);
 
             CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
 
