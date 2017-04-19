@@ -21,20 +21,71 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.File;
 using System.Threading.Tasks;
 
 namespace File_Repository
 {
     public class AzureFileStorage : StorageBase
     {
-        public override Task<FileData> GetAsync(FileGetOptions fileGetOptions)
+        public override async Task<FileData> GetAsync(FileGetOptions fileGetOptions)
         {
-            throw new NotImplementedException();
+            FileData file = new FileData();
+
+            CloudStorageAccount storageAccount = Authorized(fileGetOptions);
+
+            CloudFileClient fileClient = storageAccount.CreateCloudFileClient();
+
+            CloudFileShare fileshare = fileClient.GetShareReference(fileGetOptions.Folder);
+
+            if (fileshare.ExistsAsync().Result)
+            {
+                CloudFileDirectory cFileDir = fileshare.GetRootDirectoryReference();
+
+                CloudFile cFile = cFileDir.GetFileReference(fileGetOptions.Key);
+
+                if(cFile.ExistsAsync().Result)
+                {
+                    await cFile.DownloadToStreamAsync(file.Stream);
+                }
+            }
+
+            file.Type = "Azure File Storage";
+
+            return file;
         }
 
-        public override Task<string> SaveAsync(FileSetOptions fileSetOptions)
+        public override async Task<string> SaveAsync(FileSetOptions fileSetOptions)
         {
-            throw new NotImplementedException();
+
+            FileData file = new FileData();
+
+            CloudStorageAccount storageAccount = Authorized(fileSetOptions);
+
+            CloudFileClient fileClient = storageAccount.CreateCloudFileClient();
+
+            CloudFileShare fileshare = fileClient.GetShareReference(fileSetOptions.Folder);
+
+            await fileshare.CreateIfNotExistsAsync();
+
+            CloudFileDirectory cFileDir = fileshare.GetRootDirectoryReference();
+
+            await cFileDir.CreateIfNotExistsAsync();
+
+            CloudFile cFile = cFileDir.GetFileReference(fileSetOptions.Key);
+
+            await cFile.UploadFromStreamAsync(fileSetOptions._stream);
+
+            return fileSetOptions.Key;
+
         }
+
+        private CloudStorageAccount Authorized(dynamic secureOptions)
+        {
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(secureOptions.ConfigurationString);
+
+            return storageAccount;
+        }
+
     }
 }
