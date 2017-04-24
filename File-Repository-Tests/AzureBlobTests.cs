@@ -22,7 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ile_Repository_Tests
+namespace File_Repository_Tests
 {
     [TestClass]
     class AzureBlobTests
