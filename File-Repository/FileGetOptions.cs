@@ -1,5 +1,5 @@
 ﻿/*
- *  Copyright 2017 Criag Lee Mark Adams
+ *  Copyright 2017 Craig Lee Mark Adams
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
