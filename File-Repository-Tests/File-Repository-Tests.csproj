@@ -2,8 +2,8 @@
 
   <PropertyGroup>    
     <TargetFramework>netcoreapp1.1</TargetFramework>    
-    <RootNamespace>ile_Repository_Tests</RootNamespace>    
-    <AssemblyName>ile_Repository_Tests</AssemblyName>
+    <RootNamespace>File_Repository_Tests</RootNamespace>    
+    <AssemblyName>File_Repository_Tests</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
