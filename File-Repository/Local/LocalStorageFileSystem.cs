@@ -34,7 +34,8 @@ namespace File_Repository
 
             using (FileStream fs = new FileStream(fileAddress, FileMode.Open, FileAccess.Read))
             {
-                await fs.CopyToAsync(file.Stream);
+
+                await fs.CopyToAsync(file.Stream,(int)fs.Length);
             }
 
             file.Type = "Local File System";
@@ -58,7 +59,9 @@ namespace File_Repository
 
             using (FileStream fs = new FileStream(fileAddress, FileMode.Create, FileAccess.Write))
             {
-                await fileSetOptions._stream.CopyToAsync(fileSetOptions._stream);
+                fileSetOptions._stream.Position = 0;
+ 
+                await fileSetOptions._stream.CopyToAsync(fs);
             }
 
             return fileSetOptions.Key;

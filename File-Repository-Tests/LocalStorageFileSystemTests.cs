@@ -19,15 +19,66 @@
 
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using File_Repository;
+using Microsoft.Extensions.Configuration;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace File_Repository_Tests
 {
     [TestClass]
     public class LocalStorageFileSystemTests
     {
-        [TestMethod]
-        public void TestMethod1()
+   
+        private ConfigurationRoot configuration = null;
+
+        [TestInitialize]
+        public void Initialize()
         {
+            var builder = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("appsetting.json");
+
+            configuration = (ConfigurationRoot)builder.Build();
+        }
+
+        [TestMethod]
+        public async Task SaveFileTestAsync()
+        {
+            MemoryStream stream = new MemoryStream();
+
+            string fileLoc = Path.Combine(configuration["TestFolderAddress"], "LoadFile", "TestFile.txt");
+
+            using (var file = File.OpenRead(fileLoc))
+            {
+                file.Position = 0;
+                await file.CopyToAsync(stream);
+            }
+
+            LocalStorageFileSystem localStorageFileSystem = new LocalStorageFileSystem();
+
+            FileSetOptions fileSetOptions = new FileSetOptions() { Address = configuration["TestFolderAddress"], Folder = "SaveFile", Key = "TestFile.txt", _stream = stream };
+
+            var fileName = await localStorageFileSystem.SaveAsync(fileSetOptions);
+
+            string saveFileLoc = Path.Combine(configuration["TestFolderAddress"], "SaveFile", "TestFile.txt");
+
+            bool fileExists = File.Exists(saveFileLoc);
+
+            File.Delete(saveFileLoc);
+
+            Assert.IsTrue(fileExists);
+        }
+
+        [TestMethod]
+        public async Task LoadFileTestAsync()
+        {
+            LocalStorageFileSystem localStorageFileSystem = new LocalStorageFileSystem();
+
+            FileGetOptions fileGetOptions = new FileGetOptions() { Address = configuration["TestFolderAddress"], Folder = "LoadFile", Key = "TestFile.txt" };
+
+            var fileInformation = await localStorageFileSystem.GetAsync(fileGetOptions);
+
+            Assert.IsNotNull(fileInformation.Stream);
+
         }
     }
 }

@@ -7,9 +7,29 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="FileStorageTestArea\**" />
+    <EmbeddedResource Remove="FileStorageTestArea\**" />
+    <None Remove="FileStorageTestArea\**" />
+  </ItemGroup>
+ 
+  
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="1.1.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="1.1.11" />
     <PackageReference Include="MSTest.TestFramework" Version="1.1.11" />
+    <PackageReference Include="System.Net.Http" Version="4.3.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\File-Repository\File-Repository.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="TestArea\SaveFile\" />
+  </ItemGroup>
 </Project>

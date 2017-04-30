@@ -37,7 +37,7 @@ namespace File_Repository
 
             CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
 
-            CloudBlobContainer container = blobClient.GetContainerReference(fileGetOptions.Folder);
+            CloudBlobContainer container = blobClient.GetContainerReference(fileGetOptions.Folder.ToLower());
 
             CloudBlockBlob blockBlob = container.GetBlockBlobReference(fileGetOptions.Key);
 
@@ -75,7 +75,7 @@ namespace File_Repository
 
             CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
 
-            CloudBlobContainer container = blobClient.GetContainerReference(fileSetOptions.Folder);
+            CloudBlobContainer container = blobClient.GetContainerReference(fileSetOptions.Folder.ToLower());
 
             if (await container.CreateIfNotExistsAsync())
             {
@@ -92,6 +92,8 @@ namespace File_Repository
             }
 
             CloudBlockBlob blockBlob = container.GetBlockBlobReference(fileSetOptions.Key);
+
+            fileSetOptions._stream.Seek(0, SeekOrigin.Begin);
 
             await blockBlob.UploadFromStreamAsync(fileSetOptions._stream);
 

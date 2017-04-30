@@ -100,6 +100,8 @@ namespace File_Repository
                 }
             }
 
+            fileSetOptions._stream.Position = 0;
+
             await storageClinet.UploadObjectAsync(fileSetOptions.Folder, fileSetOptions.Key, fileSetOptions.ContentType, fileSetOptions._stream, new UploadObjectOptions() { PredefinedAcl = predefinedObjectAcl });
 
             return fileSetOptions.Key;

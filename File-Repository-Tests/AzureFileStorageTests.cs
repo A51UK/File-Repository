@@ -21,11 +21,40 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Json;
+using System.IO;
+using File_Repository;
+using System.Threading.Tasks;
+using System.Net.Http;
 
 namespace File_Repository_Tests
 {
     [TestClass]
     public class AzureFileStorageTests
     {
+
+        private ConfigurationRoot configuration = null;
+
+        [TestInitialize]
+        public void Initialize()
+        {
+            var builder = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("appsetting.json");
+
+            configuration = (ConfigurationRoot)builder.Build();
+        }
+
+        [TestMethod]
+        public void SaveFileTest()
+        {
+
+        }
+
+
+        [TestMethod]
+        public void LoadFileTest()
+        {
+
+        }
     }
 }

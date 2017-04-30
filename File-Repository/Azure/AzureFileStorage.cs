@@ -46,6 +46,7 @@ namespace File_Repository
 
                 if(cFile.ExistsAsync().Result)
                 {
+                    file.Stream.Position = 0;
                     await cFile.DownloadToStreamAsync(file.Stream);
                 }
             }
@@ -73,6 +74,8 @@ namespace File_Repository
             await cFileDir.CreateIfNotExistsAsync();
 
             CloudFile cFile = cFileDir.GetFileReference(fileSetOptions.Key);
+
+            fileSetOptions._stream.Position = 0;
 
             await cFile.UploadFromStreamAsync(fileSetOptions._stream);
 
