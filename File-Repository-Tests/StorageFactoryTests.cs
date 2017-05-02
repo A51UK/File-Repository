@@ -21,12 +21,15 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using File_Repository;
+using System.Reflection;
 
 namespace File_Repository_Tests
 {
     [TestClass]
     public class StorageFactoryTests
     {
+        private int list;
+
         [TestMethod]
         public void MakeAzureBlobTest()
         {
@@ -68,5 +71,44 @@ namespace File_Repository_Tests
 
             Assert.AreEqual(typeof(LocalStorageFileSystem), azureBlob.GetType());
         }
+
+        [TestMethod]
+        public void TestCacheTest()
+        {
+            var storageFactory = new StorageFactory();
+
+            storageFactory.GetStorage(false, "LocalStorageFileSystem");
+
+            storageFactory.GetStorage(false, "GoogleCloudStorage");
+
+            storageFactory.GetStorage(false, "AzureFileStorage");
+
+            var property = storageFactory.GetType().GetField("StorageCollection", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetField);
+
+            Assert.IsTrue(((List<StorageBase>)property.GetValue(storageFactory)).Count == 3);
+        }
+
+        [TestMethod]
+        public void ClearTest()
+        {
+            var storageFactory = new StorageFactory();
+
+            storageFactory.GetStorage(false, "LocalStorageFileSystem");
+
+            storageFactory.GetStorage(false, "GoogleCloudStorage");
+
+            storageFactory.GetStorage(false, "AzureFileStorage");
+
+            var property = storageFactory.GetType().GetField("StorageCollection", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetField);
+
+            var before = ((List<StorageBase>)property.GetValue(storageFactory)).Count;
+
+            storageFactory.ClearStorage();
+
+            var after = ((List<StorageBase>)property.GetValue(storageFactory)).Count;
+
+            Assert.IsTrue((before > after) && after == 0);
+        }
+
     }
 }
