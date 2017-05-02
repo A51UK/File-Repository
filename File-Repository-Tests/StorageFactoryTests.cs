@@ -20,11 +20,53 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using File_Repository;
 
 namespace File_Repository_Tests
 {
     [TestClass]
     public class StorageFactoryTests
     {
+        [TestMethod]
+        public void MakeAzureBlobTest()
+        {
+            var storageFactory = new StorageFactory();
+
+            var azureBlob = storageFactory.GetStorage(true, "AzureBlob");
+
+            Assert.AreEqual(typeof(AzureBlob), azureBlob.GetType());
+
+        }
+
+        [TestMethod]
+        public void MakeAzureFileStorageTest()
+        {
+            var storageFactory = new StorageFactory();
+
+            var azureBlob = storageFactory.GetStorage(true, "AzureFileStorage");
+
+            Assert.AreEqual(typeof(AzureFileStorage), azureBlob.GetType());
+        }
+
+
+        [TestMethod]
+        public void MakeGoogleCloudStorageTest()
+        {
+            var storageFactory = new StorageFactory();
+
+            var azureBlob = storageFactory.GetStorage(true, "GoogleCloudStorage");
+
+            Assert.AreEqual(typeof(GoogleCloudStorage), azureBlob.GetType());
+        }
+
+        [TestMethod]
+        public void MakeLocalStorageFileSystemTest()
+        {
+            var storageFactory = new StorageFactory();
+
+            var azureBlob = storageFactory.GetStorage(true, "LocalStorageFileSystem");
+
+            Assert.AreEqual(typeof(LocalStorageFileSystem), azureBlob.GetType());
+        }
     }
 }

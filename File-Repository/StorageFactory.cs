@@ -38,8 +38,8 @@ namespace File_Repository
 
             Type _type = null;
             StorageBase _storage = null;
-
-            _type = Type.GetType(StorageType);
+         
+            _type = Type.GetType(this.GetType().Namespace + "." + storageType);
 
             if (NewCopy == true)
             {
